@@ -17,7 +17,7 @@ once the location is available this function will be called : value is location 
         
         
         
-to captureImage call
+to capture Image call this function
 
        window.Android.captureImage("directoryName","imageName.jpg");
        
@@ -30,7 +30,7 @@ after the image is captured this function will be called value is in base64
          
          
          
-to record Video call
+to record Video call this function
 
         window.Android.recordVideo("directoryName","videoName.mp4");
         
@@ -42,7 +42,7 @@ after the video is captured this function will be called value is in base64
         
         
         
- to select Image 
+ to select Image call this function
  
         window.Android.selectImage();
         
