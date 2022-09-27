@@ -60,9 +60,7 @@ to load all images of an order
       let value = window.Android.loadOrdersPhotos("directoryName", "orderId");
           let array = JSON.parse(value);
           let imagesNamesArray = Object.keys(array);// this will get all images names from the array
-          
-          #example of array content
-          [{129923_1_2_384934343.jpg, base64...  },{892389_2_3_333333.jpg, base64...  }]
+ 
           
         
 to create a File
