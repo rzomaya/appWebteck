@@ -120,17 +120,14 @@ public class FileManger {
         }
         return encodedVideo;
     }
-    public static  String readContentOfJsonFile(  File fileUri) throws IOException {
-
-            FileReader reader = new FileReader(fileUri);
-            int character;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((character = reader.read()) != -1) {
-                stringBuilder.append((char) character);
-            }
-            reader.close();
-            return stringBuilder.toString();
-
+  
+ public static String readContentOfJsonFile(File file) throws IOException {
+        FileReader reader = new FileReader(file);
+        char[] chars = new char[(int) file.length()];
+        reader.read(chars);
+        String content = new String(chars);
+        reader.close();
+        return content;
     }
 
 
