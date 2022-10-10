@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class FileManger {
   public static String TAG = "FileManger";
@@ -39,24 +40,29 @@ public class FileManger {
         File fileUri = new File(parent, fileName);
         fileUri.delete();
     }
+
     public static  HashMap<String,String> loadOrdersPhotos(Context mContext, String dirName, String orderID) {
         HashMap<String,String> photos = new HashMap<>();
         File parent = new File(mContext.getExternalFilesDir(null), dirName);
         if (parent.exists()) {
             File[] files = parent.listFiles();
-            if(files.length > 0)
-            for (File file : files) {
-                if (file.getName().contains(orderID)) {
-                    try {
-                        photos.put(file.getName(),toBase64(mContext, Uri.fromFile(file)));
-                    } catch (IOException e) {
-                        e.printStackTrace();
+            if(Objects.requireNonNull(files).length > 0){
+                for (File file : files) {
+                    if (file.getName().contains(orderID)) {
+                        try {
+                            photos.put(file.getName(),toBase64Faster(mContext, Uri.fromFile(file)));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
             }
         }
         return  photos;
     }
+
+
+
     public static String load (Context mContext, String dirName, String fileName) throws IOException {
         File parent = new File(mContext.getExternalFilesDir(null), dirName);
         if (parent.exists()) {
@@ -98,6 +104,23 @@ public class FileManger {
         byte[] byteArray = byteArrayOutputStream .toByteArray();
         return Base64.encodeToString(byteArray, Base64.DEFAULT);
     }
+    public static String toBase64Faster(Context mContext, Uri uri) throws IOException {
+        InputStream inputStream = mContext.getContentResolver().openInputStream(uri);
+        byte[] bytes;
+        byte[] buffer = new byte[8192];
+        int bytesRead;
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        try {
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
+                output.write(buffer, 0, bytesRead);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        bytes = output.toByteArray();
+        return Base64.encodeToString(bytes, Base64.DEFAULT);
+
+    }
     public static String convertVideoToBytes(Context mContext, Uri uri) {
         String encodedVideo = null;
         try {
@@ -120,17 +143,14 @@ public class FileManger {
         }
         return encodedVideo;
     }
-    public static  String readContentOfJsonFile(  File fileUri) throws IOException {
 
-            FileReader reader = new FileReader(fileUri);
-            int character;
-            StringBuilder stringBuilder = new StringBuilder();
-            while ((character = reader.read()) != -1) {
-                stringBuilder.append((char) character);
-            }
-            reader.close();
-            return stringBuilder.toString();
-
+    public static String readContentOfJsonFile(File file) throws IOException {
+        FileReader reader = new FileReader(file);
+        char[] chars = new char[(int) file.length()];
+        reader.read(chars);
+        String content = new String(chars);
+        reader.close();
+        return content;
     }
 
 
