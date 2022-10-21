@@ -1,17 +1,29 @@
 package com.example.appwebteck;
 
+import android.app.DownloadManager;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Base64;
+import android.util.Log;
+import android.webkit.MimeTypeMap;
+import android.widget.Toast;
+
 import androidx.core.content.FileProvider;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.sql.Blob;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -152,6 +164,40 @@ public class FileManger {
         reader.close();
         return content;
     }
+    public  static void saveFiles (Context context , String fileName, String base64Data) throws IOException {
+
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +"/"+ fileName+".pdf" );
+        if (!file.exists()) {
+           file.createNewFile();
+
+        }else {
+            boolean fi =  file.delete();
+            if (fi){
+                file.createNewFile();
+                Toast.makeText(context, "file deleted and recreated", Toast.LENGTH_SHORT).show();
+            }else {
+                Toast.makeText(context, "file not deleted", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        String base64 = base64Data.substring(base64Data.indexOf(",") + 1);
+        byte[] data = Base64.decode(base64, Base64.DEFAULT);
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(data);
+        fos.flush();
+        fos.close();
+
+
+        if(file.exists()){
+            context.startActivity(new Intent(DownloadManager.ACTION_VIEW_DOWNLOADS));
+        }else {
+            Toast.makeText(context, "file not exist", Toast.LENGTH_SHORT).show();
+        }
+
+
+
+    }
+
 
 
 }

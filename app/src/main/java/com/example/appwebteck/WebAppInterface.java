@@ -2,12 +2,14 @@ package com.example.appwebteck;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.widget.Toast;
 import com.example.appwebteck.ui.main.MainViewModel;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.sql.Blob;
 import java.util.HashMap;
 
 
@@ -80,5 +82,16 @@ public class WebAppInterface {
             e.printStackTrace();
         }
     }
+
+    @JavascriptInterface
+    public void saveFiles(String fileName , String Blob){
+
+        try {
+            FileManger.saveFiles(mContext,fileName,Blob);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

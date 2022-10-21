@@ -40,7 +40,7 @@ public class MainFragment extends Fragment {
         WebView webView = view.findViewById(R.id.webview);
         mObserver = new MyLifecycleObserver(requireActivity().getActivityResultRegistry(), requireActivity(), webView);
         getLifecycle().addObserver(mObserver);
-        mViewModel.setUrl("http://192.168.1.107:3000");
+        mViewModel.setUrl("http://192.168.178.62:3000");
 
         webSettings(webView).loadUrl(mViewModel.getUrl().getValue());
         Location location = new Location(requireActivity(),mViewModel);
