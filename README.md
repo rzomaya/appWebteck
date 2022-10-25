@@ -77,8 +77,10 @@ to load one image / video / json
         // if file is json it will return the content else base64
         
         
-        
-        
+ to save files like pdfs 
+     
+        window.Android.saveFiles(fileName, base64);
+        //files will be saved in android download folder 
         
         
         
