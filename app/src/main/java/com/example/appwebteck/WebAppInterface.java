@@ -84,10 +84,10 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
-    public void saveFiles(String fileName , String Blob){
+    public void saveFiles(String fileName , String base64){
 
         try {
-            FileManger.saveFiles(mContext,fileName,Blob);
+            FileManger.saveFiles(mContext,fileName,base64);
         } catch (IOException e) {
             e.printStackTrace();
         }

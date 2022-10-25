@@ -166,7 +166,7 @@ public class FileManger {
     }
     public  static void saveFiles (Context context , String fileName, String base64Data) throws IOException {
 
-        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +"/"+ fileName+".pdf" );
+        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) +"/"+ fileName );
         if (!file.exists()) {
            file.createNewFile();
 
@@ -174,14 +174,13 @@ public class FileManger {
             boolean fi =  file.delete();
             if (fi){
                 file.createNewFile();
-                Toast.makeText(context, "file deleted and recreated", Toast.LENGTH_SHORT).show();
             }else {
-                Toast.makeText(context, "file not deleted", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "saveFiles: " +
+                        "file not deleted");
             }
         }
 
-        String base64 = base64Data.substring(base64Data.indexOf(",") + 1);
-        byte[] data = Base64.decode(base64, Base64.DEFAULT);
+        byte[] data = Base64.decode(base64Data, Base64.DEFAULT);
         FileOutputStream fos = new FileOutputStream(file);
         fos.write(data);
         fos.flush();
