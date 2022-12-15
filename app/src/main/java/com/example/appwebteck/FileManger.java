@@ -110,11 +110,17 @@ public class FileManger {
 
 
     public static String toBase64(Context mContext, Uri uri) throws IOException {
-        Bitmap myBitmap =  MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), uri);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        myBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
-        byte[] byteArray = byteArrayOutputStream .toByteArray();
-        return Base64.encodeToString(byteArray, Base64.DEFAULT);
+
+        if (uri.toString().contains(".mp4")) {
+            return convertVideoToBytes(mContext, uri);
+        } else {
+            Bitmap myBitmap =  MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), uri);
+            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+            myBitmap.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOutputStream);
+            byte[] byteArray = byteArrayOutputStream .toByteArray();
+            return Base64.encodeToString(byteArray, Base64.DEFAULT);
+        }
+
     }
     public static String toBase64Faster(Context mContext, Uri uri) throws IOException {
         InputStream inputStream = mContext.getContentResolver().openInputStream(uri);

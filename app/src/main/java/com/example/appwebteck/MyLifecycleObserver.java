@@ -2,6 +2,7 @@ package com.example.appwebteck;
 
 import android.app.Activity;
 import android.net.Uri;
+import android.util.Log;
 import android.webkit.WebView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.ActivityResultRegistry;
@@ -63,6 +64,7 @@ public class MyLifecycleObserver implements DefaultLifecycleObserver {
         recordVideo = mRegistry.register("keyTwo", owner, new ActivityResultContracts.TakeVideo(),
                         result -> {
                             try {
+                                Log.d(TAG, "onCreate: "+fUri);
                                 String base64 =FileManger.toBase64(mContext,fUri);
                                 final String retFunction = "videoGotFromAndroid('data:video/mp4;base64," + URLEncoder.encode(base64, "UTF-8") + "');";
                                 webView.evaluateJavascript(retFunction,null);
