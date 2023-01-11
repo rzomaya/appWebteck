@@ -40,7 +40,7 @@ public class MainFragment extends Fragment {
         WebView webView = view.findViewById(R.id.webview);
         mObserver = new MyLifecycleObserver(requireActivity().getActivityResultRegistry(), requireActivity(), webView);
         getLifecycle().addObserver(mObserver);
-        mViewModel.setUrl("http://10.200.10.102:3000");
+        mViewModel.setUrl("https://download.mpsservice.net/build/index.html");
 
         webSettings(webView).loadUrl(mViewModel.getUrl().getValue());
         Location location = new Location(requireActivity(),mViewModel);
