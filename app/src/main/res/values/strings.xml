@@ -1,3 +1,29 @@
 <resources>
     <string name="app_name">appWebteck</string>
+    <string name="permissions">Permissions</string>
+    <string name="camera_permission">Camera permission is required to use the camera</string>
+    <string name="location_permission">Location permission is required to use the location</string>
+    <string name="microphone_permission">Microphone permission is required to use the microphone</string>
+    <string name="record_audio_permission">Record audio permission is required to record audio</string>
+    <string name="foreground_service_permission">Foreground service permission is required to use the foreground service</string>
+    <string name="storage_permission">Storage permission is required to use the storage</string>
+    <string name="switch_camera">Camera</string>
+    <string name="switch_location">Location</string>
+    <string name="switch_microphone">Microphone</string>
+    <string name="switch_foreground_service">Foreground service</string>
+    <string name="switch_storage">Storage</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="update_available">Update Available</string>
+    <string name="update_message">A new version of the app is available. Please update the app to continue using it.</string>
+    <string name="update">Update</string>
+    <string name="updating">Updating</string>
+    <string name="Downloading">Downloading</string>
+    <string name="download_failed">Download failed</string>
+    <string name="download_successful">Download successful</string>
+    <string name="download_cancelled">Download cancelled</string>
+    <string name="allow_permissions">Please enable the necessary permissions to use the app</string>
+
+
+
 </resources>

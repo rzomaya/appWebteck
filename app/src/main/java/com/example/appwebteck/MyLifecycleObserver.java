@@ -20,6 +20,8 @@ public class MyLifecycleObserver implements DefaultLifecycleObserver {
     private ActivityResultLauncher<String> mGetContent;
     private ActivityResultLauncher<Uri> takePicture;
     private ActivityResultLauncher<Uri> recordVideo;
+
+
     private Uri fUri;
     private final String TAG = "MyLifecycleObserver";
     private final Activity mContext;
@@ -37,9 +39,16 @@ public class MyLifecycleObserver implements DefaultLifecycleObserver {
         mGetContent = mRegistry.register("key", owner, new ActivityResultContracts.GetContent(),
                 uri -> {
                     try {
-                        String base64 =  FileManger.toBase64(mContext ,uri);
-                        final String retFunction = "imgGotFromAndroid('data:image/png;base64," + URLEncoder.encode(base64, "UTF-8") + "');";
-                        webView.evaluateJavascript(retFunction,null);
+                        String mimeType = mContext.getContentResolver().getType(uri);
+                        if (mimeType.contains("image")) {
+                            String base64 =FileManger.toBase64Faster(mContext,uri);
+                            final String retFunction = "imgGotFromAndroid('data:image/png;base64," + URLEncoder.encode(base64, "UTF-8") + "');";
+                            webView.evaluateJavascript(retFunction,null);
+                        } else if (mimeType.contains("video")) {
+                            String base64 =FileManger.convertVideoToBytes(mContext,uri);
+                            final String retFunction = "videoGotFromAndroid('data:video/mp4;base64," + URLEncoder.encode(base64, "UTF-8") + "');";
+                            webView.evaluateJavascript(retFunction,null);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -49,7 +58,7 @@ public class MyLifecycleObserver implements DefaultLifecycleObserver {
                 result -> {
                     try {
 
-                            String base64 =FileManger.toBase64(mContext,fUri);
+                            String base64 =FileManger.toBase64Faster(mContext,fUri);
                             final String retFunction = "imgGotFromAndroid('data:image/png;base64," + URLEncoder.encode(base64, "UTF-8") + "');";
                             webView.evaluateJavascript(retFunction,null);
 
@@ -64,8 +73,8 @@ public class MyLifecycleObserver implements DefaultLifecycleObserver {
         recordVideo = mRegistry.register("keyTwo", owner, new ActivityResultContracts.TakeVideo(),
                         result -> {
                             try {
-                                Log.d(TAG, "onCreate: "+fUri);
-                                String base64 =FileManger.toBase64(mContext,fUri);
+
+                                String base64 =FileManger.convertVideoToBytes(mContext,fUri);
                                 final String retFunction = "videoGotFromAndroid('data:video/mp4;base64," + URLEncoder.encode(base64, "UTF-8") + "');";
                                 webView.evaluateJavascript(retFunction,null);
 
@@ -76,8 +85,10 @@ public class MyLifecycleObserver implements DefaultLifecycleObserver {
     }
 
     public void selectImage() {
-        // Open the activity to select an image
-        mGetContent.launch("image/*");
+        // Open the activity to select  file
+
+        mGetContent.launch("image/video/*");
+
     }
     public  void captureImage(Uri uri) {
         // Open the activity to capture an image

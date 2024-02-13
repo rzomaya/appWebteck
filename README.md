@@ -3,16 +3,16 @@
 
 #usage
 
-to retrive the location call 
+to retrive the locationX call 
 
          window.Android.getLocation();
       
       
-once the location is available this function will be called : value is location object 
+once the locationX is available this function will be called : value is locationX object 
 
        window.locationGotFromAndroid = function (value) {
-              const location = JSON.parse(value);
-               console.log(location);
+              const locationX = JSON.parse(value);
+               console.log(locationX);
        };
         
         
