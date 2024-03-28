@@ -67,6 +67,14 @@ public class WebAppInterface {
     }
 
     @JavascriptInterface
+    public void resetConfig() {
+        SharedPreferences sharedPref = mContext.getSharedPreferences("appWebTeck",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.clear();
+        editor.apply();
+    }
+
+    @JavascriptInterface
     public void getLocation() {
 
     }
@@ -80,6 +88,12 @@ public class WebAppInterface {
             updaterViewModel.forceUpdate.postValue(forceUpdate);
             updaterViewModel.update.postValue(true);
         }
+    }
+
+    //get the current app version manifest
+    @JavascriptInterface
+    public int getAppVersion() {
+        return BuildConfig.VERSION_CODE;
     }
 
 

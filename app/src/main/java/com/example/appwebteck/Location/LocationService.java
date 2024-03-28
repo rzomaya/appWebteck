@@ -62,7 +62,7 @@ public class LocationService extends Service {
 
     private int locationMaxUpdateDelay = 30 * 1000;// 30 seconds
 
-    private  int locationMinUpdateDistance = 1000; // 10 meters
+    private  int locationMinUpdateDistance = 500; // 500 meters
    private PowerManager powerManager ;
 
    private PowerManager.WakeLock wakeLock;

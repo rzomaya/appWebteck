@@ -10,8 +10,9 @@ public class MainViewModel extends ViewModel {
     private  final MutableLiveData<String> url = new MutableLiveData<>();
     private  final MutableLiveData<String> location = new MutableLiveData<>();
     private  final MutableLiveData<ValueCallback<Uri[]> > filePathCallback = new MutableLiveData<>();
-
     private final MutableLiveData<Uri> uri = new MutableLiveData<>();
+
+    private  final MutableLiveData<Boolean> goBack = new MutableLiveData<>();
 
 
 
@@ -47,6 +48,15 @@ public class MainViewModel extends ViewModel {
     public void setUri(Uri uri) {
         this.uri.setValue(uri);
     }
+
+    public MutableLiveData<Boolean> getGoBack() {
+        return goBack;
+    }
+
+    public void setGoBack(Boolean goBack) {
+        this.goBack.setValue(goBack);
+    }
+
 
 
 }

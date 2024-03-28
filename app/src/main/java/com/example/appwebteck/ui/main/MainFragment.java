@@ -3,6 +3,8 @@ package com.example.appwebteck.ui.main;
 import static androidx.core.app.ActivityCompat.startActivityForResult;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,6 +23,8 @@ import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -70,14 +74,15 @@ public class MainFragment extends Fragment {
 
         SharedPreferences sharedPref = getActivity().getSharedPreferences("appWebTeck", getActivity().MODE_PRIVATE);
         String workerId = sharedPref.getString("workerId", null);
-        String pageUrl = sharedPref.getString("pageUrl", "http:192.168.1.100:3000");//https://webappteck.ir-service.com
+        String pageUrl = sharedPref.getString("pageUrl", "https://download.mpsservice.net/testWebAppteck/index.html");//https://webappteck.ir-service.com
         if (workerId != null) {
             if(!permissions.checkAllPermission()){
                 permissions.showPopUp();
             }
         }
         mViewModel.setUrl(pageUrl);
-        webSettings(webView).loadUrl(pageUrl);
+        webView.clearCache(true);//remove when in production
+        webSettings(webView).loadUrl("http:192.168.1.102:3000");
         if (pageUrl != null) {
             mViewModel.setUrl(pageUrl);
         }
@@ -86,6 +91,14 @@ public class MainFragment extends Fragment {
             if(ask){
                 if(!permissions.checkAllPermission()){
                     permissions.showPopUp();
+                }
+            }
+        });
+
+        mViewModel.getGoBack().observe((LifecycleOwner) this, goBack -> {
+            if(goBack){
+                if(onBackPressed(webView)){
+                    mViewModel.setGoBack(false);
                 }
             }
         });
@@ -127,44 +140,107 @@ public class MainFragment extends Fragment {
     }
 
 
+    //handle onBackPress and go back to previous page
+    public boolean onBackPressed(WebView webView) {
+        if (webView.canGoBack()) {
+
+            //get the current url
+            String url = webView.getUrl();
+            if (url.contains("Report")) {
+                //show dialog to confirm exit
+                Dialog dialog = new Dialog(getActivity());
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("Exit");
+                builder.setMessage("Are you sure you want to exit?");
+                builder.setPositiveButton("Yes", (dialog1, which) -> {
+                    webView.goBack();
+                    dialog.dismiss();
+                });
+                builder.setNegativeButton("No", (dialog12, which) -> dialog.dismiss());
+                builder.show();
+            }else{
+                webView.goBack();
+            }
+            return true;
+        }
+        return false;
+    }
+
 
 }
 
 class MyWebViewClient extends android.webkit.WebViewClient {
+    String TAG = "MyWebViewClient";
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        Log.d("MyWebViewClient", "shouldOverrideUrlLoading: " + url);
+
+        Log.d(TAG, "shouldOverrideUrlLoading: "+url);
+       //if tel: link is clicked open dialer
+        if (url.startsWith("tel:")) {
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
+            view.getContext().startActivity(intent);
+            return true;
+        }
+
+        //if mailto: link is clicked open mail app
+        if (url.startsWith("mailto:")) {
+            Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
+            view.getContext().startActivity(intent);
+            return true;
+        }
+
+        //if https google maps link is clicked open google maps
+        if (url.startsWith("https://maps.google.com")) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            view.getContext().startActivity(intent);
+            return true;
+        }
+
+        //if https://www.google.com/maps link is clicked open google maps
+        if (url.startsWith("https://www.google.com/maps")) {
+            Log.d(TAG, "shouldOverrideUrlLoading: ");
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            view.getContext().startActivity(intent);
+            return true;
+        }
+
+        //if the same url reload the page
+        if (url.equals(view.getUrl())) {
+            view.reload();
+            return true;
+        }
+
         view.loadUrl(url);
         return true;
     }
 
     @Override
     public void onPageFinished(WebView view, String url) {
-        Log.d("MyWebViewClient", "onPageFinished: " + url);
+        Log.d(TAG, "onPageFinished: " + url);
         super.onPageFinished(view, url);
     }
 
     @Override
     public void onPageStarted(WebView view, String url, android.graphics.Bitmap favicon) {
-        Log.d("MyWebViewClient", "onPageStarted: " + url);
+        Log.d(TAG, "onPageStarted: " + url);
         super.onPageStarted(view, url, favicon);
     }
 
     @Override
     public void onLoadResource(WebView view, String url) {
-        Log.d("MyWebViewClient", "onLoadResource: " + url);
+        Log.d(TAG, "onLoadResource: " + url);
         super.onLoadResource(view, url);
     }
 
     @Override
     public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-        Log.d("MyWebViewClient", "onReceivedError: " + description);
+        Log.d(TAG, "onReceivedError: " + description);
         super.onReceivedError(view, errorCode, description, failingUrl);
     }
 
     @Override
     public void onReceivedHttpError(WebView view, android.webkit.WebResourceRequest request, android.webkit.WebResourceResponse errorResponse) {
-        Log.d("MyWebViewClient", "onReceivedHttpError: " + errorResponse.getReasonPhrase());
+        Log.d(TAG, "onReceivedHttpError: " + errorResponse.getReasonPhrase());
         super.onReceivedHttpError(view, request, errorResponse);
     }
 
@@ -300,5 +376,6 @@ class MyWebChromeClient extends android.webkit.WebChromeClient {
         Log.d("MyWebChromeClient", "getVideoLoadingProgressView: ");
         return super.getVideoLoadingProgressView();
     }
+
 
 }

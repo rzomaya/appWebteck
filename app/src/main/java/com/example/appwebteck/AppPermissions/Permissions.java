@@ -1,7 +1,6 @@
 package com.example.appwebteck.AppPermissions;
 
 import static androidx.core.app.ActivityCompat.requestPermissions;
-
 import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
@@ -10,24 +9,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
-
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
-
 import com.example.appwebteck.R;
-import com.example.appwebteck.ui.main.MainViewModel;
 import com.google.android.material.switchmaterial.SwitchMaterial;
-
-import java.util.zip.Inflater;
 
 public class Permissions {
     private static final String TAG = "Permissions";

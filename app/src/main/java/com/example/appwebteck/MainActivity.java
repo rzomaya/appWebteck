@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.webkit.ValueCallback;
@@ -218,4 +219,26 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        // Check whether the key event is the Back button and if there's history.
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            mViewModel.setGoBack(true);
+            return true;
+        }
+        // If it isn't the Back button or there's no web page history, bubble up to
+        // the default system behavior. Probably exit the activity.
+        return super.onKeyDown(keyCode, event);
     }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(LocationService.shouldTrack()){
+            this.stopService(serviceIntent);
+        }
+    }
+
+}

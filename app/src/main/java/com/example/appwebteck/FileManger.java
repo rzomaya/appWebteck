@@ -233,7 +233,7 @@ public class FileManger {
                 outStream = new FileOutputStream(file);
             }
 
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outStream); // No compression
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 70, outStream);
 
             outStream.flush();
             outStream.close();
